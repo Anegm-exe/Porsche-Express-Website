@@ -1,0 +1,308 @@
+﻿/* Scroll Bar Hide */
+html { scrollbar-width: none; /* Firefox */ }
+body::-webkit-scrollbar { display: none; /* (Chrome, Safari, etc.) */ }
+body::-webkit-scrollbar-track { background: transparent; /* scrollbar track invisible */ }
+body::-webkit-scrollbar-thumb { background: transparent; /* scrollbar thumb (the draggable part) invisible */ }
+
+/* Page Init */ 
+body {
+    background-image: url("images/about/AboutBG.jpg");
+    background-color: none;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+@font-face {
+    font-family: 'CF1';
+    src: url('fonts/Caflisch Script Regular.ttf') format('woff2');
+}
+
+/* Sections - Containers */
+.Container-MM{
+    position: relative;
+    width: 100%;
+    z-index: 0;
+}
+
+.Vcontainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 950px;
+    height: 534px;
+}
+
+.Container-Main {
+    position: fixed;
+    width: 600px;
+    height: 400px;
+    top: 0;
+    right: 0;
+    transform: translate(-25%, 30%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+    color: white;
+    border: none;
+}
+
+    .Container-Main h {
+        text-align: center;
+        font-family: 'CF1', Roboto;
+        font-size: 40px;
+        justify-content: center;
+    }
+
+    .Container-Main p {
+        margin-left: 50px;
+        margin-right: 50px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* Call Animation */
+    .Container-Main h {
+        animation: glow 6s ease-in-out infinite;
+    }
+
+
+/* Side Arrows */
+.arrow {
+    position: absolute;
+    margin: -25px;
+    cursor: pointer;
+}
+
+    .arrow span {
+        display: block;
+        width: 1.5vw;
+        height: 1.5vw;
+        border-bottom: 5px solid darkred;
+        border-right: 5px solid darkred;
+        margin: -10px;
+        animation: animate 2s infinite;
+    }
+
+    .arrow span:nth-child(2) {
+        animation-delay: -0.2s;
+    }
+
+    .arrow span:nth-child(3) {
+        animation-delay: -0.4s;
+    }
+
+#leftarrow {
+    left: 0;
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+#rightarrow {
+    right: 0;
+    transform: translate(-50%, -50%) rotate(270deg);
+}
+
+/* Down Arrow */
+.arrow-icon {
+    background-color: transparent;
+    height: 2.8em;
+    width: 2.8em;
+    display: block;
+    top: 0;
+    padding: 0.5em;
+    margin: 1em auto;
+    position: relative;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.left-bar {
+    position: absolute;
+    background-color: transparent;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 10px;
+    display: block;
+    transform: rotate(35deg);
+    float: right;
+    border-radius: 2px;
+}
+
+    .left-bar:after {
+        content: "";
+        background-color: white;
+        width: 40px;
+        height: 10px;
+        display: block;
+        float: right;
+        border-radius: 6px 10px 10px 6px;
+        transition: all 0.3s ease; /* Replace $duration and $easing with actual values */
+        z-index: -1;
+    }
+
+.right-bar {
+    position: absolute;
+    background-color: transparent;
+    top: 0px;
+    left: 26px;
+    width: 40px;
+    height: 10px;
+    display: block;
+    transform: rotate(-35deg);
+    float: right;
+    border-radius: 2px;
+}
+
+    .right-bar:after {
+        content: "";
+        background-color: white;
+        width: 40px;
+        height: 10px;
+        display: block;
+        float: right;
+        border-radius: 10px 6px 6px 10px;
+        transition: all 0.3s ease; /* Replace $duration and $easing with actual values */
+        z-index: -1;
+    }
+
+
+.open .left-bar:after {
+    transform-origin: center center;
+    transform: rotate(-70deg);
+}
+
+.open .right-bar:after {
+    transform-origin: center center;
+    transform: rotate(70deg);
+}
+
+/* Dots */
+.dot {
+    position: absolute;
+    bottom: 10%;
+    height: 7px;
+    width: 7px;
+    margin: 0 2px;
+    align-content: center;
+    background-color: snow;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    transition: background-color 0.6s ease;
+}
+
+.active {
+    background-color: goldenrod;
+}
+
+/* Animation */
+@keyframes animate {
+    0% {
+        opacity: 0;
+        transform: rotate(45deg) translate(-20px, -20px);
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: rotate(45deg) translate(20px, 20px);
+    }
+}
+
+/* Glowing Effect */
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+    }
+
+    50% {
+        text-shadow: 0 0 11px rgba(255, 255, 255, 0.3), 0 0 12px rgba(255, 255, 255, 0.3), 0 0 13px rgba(255, 255, 255, 0.3), 0 0 14px rgba(255, 255, 255, 0.3), 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Fading Effect */
+@keyframes fadeOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(250px);
+    }
+}
+
+@keyframes fadeOutLeft {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-250px);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-250px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(250px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Background Color */
+#C2 {
+    transition: background-color 0.5s ease; /* Add this line */
+}

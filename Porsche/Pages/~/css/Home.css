@@ -1,0 +1,46 @@
+/* Scroll Bar Hide */
+html { scrollbar-width: none; /* Firefox */ }
+body::-webkit-scrollbar { display: none; /* (Chrome, Safari, etc.) */ }
+body::-webkit-scrollbar-track { background: transparent; /* scrollbar track invisible */ }
+body::-webkit-scrollbar-thumb { background: transparent; /* scrollbar thumb (the draggable part) invisible */ }
+
+body {
+    margin: 0;
+}
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  background-color: black;
+}
+
+.video-container {
+    position: relative;
+}
+
+#Homevid {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 112%;
+    z-index: 0;
+    
+}
+
+.gradient-overlay {
+    position: relative;
+    width: 100%;
+    height: 1050px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    z-index: 1;
+}

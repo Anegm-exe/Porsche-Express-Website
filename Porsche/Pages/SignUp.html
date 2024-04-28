@@ -1,0 +1,117 @@
+﻿<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="~/css/Layout.css">
+        <link rel="stylesheet" href="~/css/SignUp.css">
+        <title> Porsche - SignUp </title>
+    </head>
+    <body>
+        <header data-role="Header" class="home-header">
+            <a href="About.html">
+                <img src="~/css/images/Header/About.png" class="home-image" />
+            </a>
+            <a href="Collection.html">
+                <img src="~/css/images/Header/Collection.png" class="home-image" />
+            </a>
+            <a href="Home.html">
+                <img src="~/css/images/Header/Porsche.png" class="home-image-mid" />
+            </a>
+            <a href="Contact.html">
+                <img src="~/css/images/Header/Contact.png" class="home-image" />
+            </a>
+            <a href="SignIn.html">
+                <img src="~/css/images/Header/SignIn.png" class="home-image" />
+            </a>
+            <div data-role="BurgerMenu" class="home-burger-menu" onclick="openNav()">
+                <svg viewBox="0 0 1024 1024" class="home-icon">
+                    <path d="M128 554.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 298.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667zM128 810.667h768c23.552 0 42.667-19.115 42.667-42.667s-19.115-42.667-42.667-42.667h-768c-23.552 0-42.667 19.115-42.667 42.667s19.115 42.667 42.667 42.667z"></path>
+                </svg>
+            </div>
+        </header>
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" sytle="color:snow;">x</a>
+            <a href="Home.html">Home</a>
+            <a href="About.html">About</a>
+            <a href="Collection.html">Collection</a>
+            <a href="Contact.html">Contact</a>
+            <a href="SignIn.html">Sign In</a>
+        </div>
+        <div class="content-container">
+            <div class="Container">
+                <!-- Image -->
+                <div class="CContainer">
+                    <img src="~/css/images/Sign/Logo2.png" alt="Logo" class="logoimg">
+                </div>
+                <div class="Containerlogin">
+                    <!-- First Name -->
+                    <div class="FirstName">
+                        <div class="field">
+                            <input id="FirstName" placeholder="First Name" required="required">
+                            <!-- @Html.TextBoxFor(m => m.Description, new { @placeholder = "Description", @required = "required", @maxlength = "200" }) -->
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                    <!-- Last Name -->
+                    <div class="LastName">
+                        <div class="field">
+                            <input id="LastName" placeholder="Last Name" required="required">
+                            <!-- @Html.TextBoxFor(m => m.Description, new { @placeholder = "Description", @required = "required", @maxlength = "200" }) -->
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                    <!-- password -->
+                    <div class="Password">
+                        <div class="field">
+                            <input type="Password" id="Passone" placeholder="Enter password" required="required">
+                            <!-- @Html.TextBoxFor(m => m.Event_Id, new { @type = "number", @placeholder = "EventID  ", @required = "required", @maxlength = "10" }) -->
+                            <div class="line"></div>
+                            <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Iconone">
+                        </div>
+                    </div>
+                    <!-- password confirm -->
+                    <div class="Password2">
+                        <div class="field">
+                            <input type="Password" id="Passtwo" placeholder="Confirm password" required="required">
+                            <!-- @Html.TextBoxFor(m => m.Event_Id, new { @type = "number", @placeholder = "EventID  ", @required = "required", @maxlength = "10" }) -->
+                            <div class="line"></div>
+                            <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Icontwo">
+                        </div>
+                    </div>
+                    <!-- email -->
+                    <div class="Email">
+                        <div class="field">
+                            <input id="Email" placeholder="Example@mail.com" required="required">
+                            <!-- @Html.TextBoxFor(m => m.Description, new { @placeholder = "Description", @required = "required", @maxlength = "200" }) -->
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                    <!-- BirthDay -->
+                    <div class="BD">
+                        <p class="birth">
+                            <!-- @Html.TextBoxFor(m => m.Birth_Date, new { @type = "date", @class = "birthdate", @placeholder = "Birthdate", @required = "required" }) -->
+                            <input type="date" id="Birth_Date" name="Birth_Date" class="birthdate" placeholder="Birthdate" required="required">
+                        </p>
+                    </div>
+                </div>
+                <!-- Submit -->
+                <div class="BContainer" style="margin-top:60px;">
+                    <button class="submitionbutton" role="button">Register</button>
+                </div>
+                <!-- SignIn -->
+                <div class="TContainer">
+                    <p style="color: snow;font-size:14px;margin:0px">
+                        Already Have An Account?
+                    </p>
+                </div>
+                <div class="BContainer" style="margin-top:5px;">
+                    <a href="SignIn.html">
+                        <button type="button" class="button-style">SignIn</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="~/js/Layout.js" asp-append-version="true"></script>
+        <script src="~/js/SignUp.js" asp-append-version="true"></script>
+    </body>
+</html>
