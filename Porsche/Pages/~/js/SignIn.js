@@ -14,10 +14,8 @@ hideIcon.addEventListener('mouseup', function () {
 $(document).ready(function () {
     $(".submitionbutton").click(function (e) {
         e.preventDefault();
-
         var email = $("#Email").val();
         var password = $("#Password").val();
-
         $.ajax({
             url: '/SignIn',
             type: 'post',

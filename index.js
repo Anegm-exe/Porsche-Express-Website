@@ -65,7 +65,38 @@ app.post('/SignUp', async (req, res) => {
     }
 });
 
+app.post('/SignIn', async (req, res) => {
+  const { email, password } = req.body;
+  console.log(req.body)
+  const db = client.db('porsche');
+  const customerCollection = db.collection('Customer');
+  const adminCollection = db.collection('Admin');
 
+  try {
+      // Check in Customer table
+      let user = await customerCollection.findOne({ email: email });
+      if (!user) {
+          // If not found in Customer table, check in Admin table
+          user = await adminCollection.findOne({ email: email });
+      }
+
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+      if (password != user.password) {
+          return res.status(403).send('Invalid password');
+      }
+      // If the password is correct, generate a JWT for the user
+      // Include the user's role in the JWT payload
+      const token = jwt.sign({ _id: user._id, role: user.role }, secretKey);
+
+      // Send the token to the client
+      res.status(200).json({ token: token });
+  } catch (err) {
+      console.error('Error occurred while signing in:', err);
+      res.status(500).send('An error occurred');
+  }
+});
 // JWT verification middleware
 function authenticateToken(req, res, next) {
   const token = req.headers['authorization'];
