@@ -2,9 +2,9 @@
   "name": "porsche-express-website",
   "version": "1.0.0",
   "description": "Porsche Express Website Using A Static Webpage Using Express to Server Mongo DB for Database",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +16,6 @@
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.3",
     "nodemon": "^3.1.0"
-  }
+  },
+  "devDependencies": {}
 }

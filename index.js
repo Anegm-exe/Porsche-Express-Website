@@ -23,11 +23,10 @@ app.get('/:page', (req, res) => {
   const page = req.params.page;
   const filePath = path.join(__dirname, `Porsche/Pages/${page}.html`);
 
-  if (fs.existsSync(filePath)) {
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send('Page not found');
-  }
+    if (fs.existsSync(filePath))
+        res.status(200).sendFile(filePath);
+    else
+        res.status(404).send('Page not found');
 });
 
 
