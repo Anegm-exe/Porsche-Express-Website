@@ -37,81 +37,78 @@
             <a href="Contact">Contact</a>
             <a href="SignIn">Sign In</a>
         </div>
-        <div class="content-container">
-            <div class="Container">
-                <!-- Image -->
-                <div class="CContainer">
-                    <img src="~/css/images/Sign/Logo2.png" alt="Logo" class="logoimg">
-                </div>
-                <div class="Containerlogin">
-                    <!-- First Name -->
-                    <div class="FirstName">
-                        <div class="field">
-                            <input id="FirstName" placeholder="First Name" required="required">
-                            <!-- @Html.TextBoxFor(m => m.Description, new { @placeholder = "Description", @required = "required", @maxlength = "200" }) -->
-                            <div class="line"></div>
+        <form action="/SignUp" method="post">
+            <div class="content-container">
+                <div class="Container">
+                    <!-- Image -->
+                    <div class="CContainer">
+                        <img src="~/css/images/Sign/Logo2.png" alt="Logo" class="logoimg">
+                    </div>
+                    <div class="Containerlogin">
+                        <!-- First Name -->
+                        <div class="FirstName">
+                            <div class="field">
+                                <input type="text" id="FirstName" name="Fname" placeholder="First Name" required="required">
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <!-- Last Name -->
+                        <div class="LastName">
+                            <div class="field">
+                                <input type="text" id="LastName" name="Lname" placeholder="Last Name" required="required">
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <!-- password -->
+                        <div class="Password">
+                            <div class="field">
+                                <input type="text" id="Passone" name="password" placeholder="Enter password" required="required">
+                                <div class="line"></div>
+                                <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Iconone">
+                            </div>
+                        </div>
+                        <!-- Confirm password -->
+                        <div class="Password2">
+                            <div class="field">
+                                <input type="text" id="Passtwo" name="confirmPassword" placeholder="Confirm password" required="required">
+                                <div class="line"></div>
+                                <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Icontwo">
+                            </div>
+                        </div>
+                        <!-- email -->
+                        <div class="Email">
+                            <div class="field">
+                                <input type="email" id="Email" name="email" placeholder="Example@mail.com" required="required">
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                        <!-- BirthDay -->
+                        <div class="BD">
+                            <p class="birth">
+                                <input type="date" id="Birth_Date" name="dob" class="birthdate" placeholder="Birthdate" required="required">
+                            </p>
                         </div>
                     </div>
-                    <!-- Last Name -->
-                    <div class="LastName">
-                        <div class="field">
-                            <input id="LastName" placeholder="Last Name" required="required">
-                            <!-- @Html.TextBoxFor(m => m.Description, new { @placeholder = "Description", @required = "required", @maxlength = "200" }) -->
-                            <div class="line"></div>
-                        </div>
+                    <!-- Submit -->
+                    <div class="BContainer" style="margin-top:60px;">
+                        <button type="submit" class="submitionbutton" role="button">Register</button>
                     </div>
-                    <!-- password -->
-                    <div class="Password">
-                        <div class="field">
-                            <input type="Password" id="Passone" placeholder="Enter password" required="required">
-                            <!-- @Html.TextBoxFor(m => m.Event_Id, new { @type = "number", @placeholder = "EventID  ", @required = "required", @maxlength = "10" }) -->
-                            <div class="line"></div>
-                            <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Iconone">
-                        </div>
-                    </div>
-                    <!-- password confirm -->
-                    <div class="Password2">
-                        <div class="field">
-                            <input type="Password" id="Passtwo" placeholder="Confirm password" required="required">
-                            <!-- @Html.TextBoxFor(m => m.Event_Id, new { @type = "number", @placeholder = "EventID  ", @required = "required", @maxlength = "10" }) -->
-                            <div class="line"></div>
-                            <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Icontwo">
-                        </div>
-                    </div>
-                    <!-- email -->
-                    <div class="Email">
-                        <div class="field">
-                            <input id="Email" placeholder="Example@mail.com" required="required">
-                            <!-- @Html.TextBoxFor(m => m.Description, new { @placeholder = "Description", @required = "required", @maxlength = "200" }) -->
-                            <div class="line"></div>
-                        </div>
-                    </div>
-                    <!-- BirthDay -->
-                    <div class="BD">
-                        <p class="birth">
-                            <!-- @Html.TextBoxFor(m => m.Birth_Date, new { @type = "date", @class = "birthdate", @placeholder = "Birthdate", @required = "required" }) -->
-                            <input type="date" id="Birth_Date" name="Birth_Date" class="birthdate" placeholder="Birthdate" required="required">
+                    <!-- SignIn -->
+                    <div class="TContainer">
+                        <p style="color: snow;font-size:14px;margin:0px">
+                            Already Have An Account?
                         </p>
                     </div>
-                </div>
-                <!-- Submit -->
-                <div class="BContainer" style="margin-top:60px;">
-                    <button class="submitionbutton" role="button">Register</button>
-                </div>
-                <!-- SignIn -->
-                <div class="TContainer">
-                    <p style="color: snow;font-size:14px;margin:0px">
-                        Already Have An Account?
-                    </p>
-                </div>
-                <div class="BContainer" style="margin-top:5px;">
-                    <a href="SignIn">
-                        <button type="button" class="button-style">SignIn</button>
-                    </a>
+                    <div class="BContainer" style="margin-top:5px;">
+                        <a href="SignIn">
+                            <button type="button" class="button-style">SignIn</button>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
         <script src="~/js/Layout.js" asp-append-version="true"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="~/js/SignUp.js" asp-append-version="true"></script>
     </body>
 </html>

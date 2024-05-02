@@ -13,6 +13,7 @@ const secretKey = process.env.SECRET_KEY || '3kWn7$!l#X@3l7cF';
 
 const publicPath = path.join(__dirname,'Porsche/Pages');
 app.use(express.static(publicPath));
+app.use(express.urlencoded({ extended: true }));
 
 // Page Loaders
 app.get('/', (req, res) => {
@@ -27,6 +28,41 @@ app.get('/:page', (req, res) => {
         res.status(200).sendFile(filePath);
     else
         res.status(404).send('Page not found');
+});
+
+app.post('/SignUp', async (req, res) => {
+    const { Fname, Lname, email, password, confirmPassword, dob } = req.body;
+
+    // Check if password and confirmPassword match
+    if (password !== confirmPassword) {
+        return res.status(400).send('Passwords do not match');
+    }
+
+    const db = client.db('porsche');
+    const usersCollection = db.collection('Customer');
+
+    // Create new user
+    const newUser = {
+        First_name: Fname,
+        Last_name: Lname,
+        email: email,
+        password: password, // TODO: hash passwords
+        dob: dob
+    };
+
+    try {
+        // Insert the new user into the database
+        const result = await usersCollection.insertOne(newUser);
+        console.log(`New user created with the following id: ${result.insertedId}`);
+        res.status(201).send('User created');
+    } catch (err) {
+        console.error('Error occurred while creating user:', err);
+        if (err.code === 11000) {
+            res.status(409).send('Email already exists');
+        } else {
+            res.status(500).send('An error occurred');
+        }
+    }
 });
 
 
@@ -62,6 +98,6 @@ async function run() {
 
 run().catch(console.dir);
 
-app.listen(PORT,'0.0.0.0', () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
