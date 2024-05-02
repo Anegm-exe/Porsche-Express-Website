@@ -30,11 +30,6 @@ app.get('/:page', (req, res) => {
   }
 });
 
-// 
-
-app.listen(PORT,'0.0.0.0', () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
 
 // JWT verification middleware
 function authenticateToken(req, res, next) {
@@ -67,3 +62,7 @@ async function run() {
 }
 
 run().catch(console.dir);
+
+app.listen(PORT,'0.0.0.0', () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
