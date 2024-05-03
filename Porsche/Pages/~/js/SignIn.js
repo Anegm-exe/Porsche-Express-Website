@@ -20,8 +20,9 @@ $(document).ready(function () {
             url: '/SignIn',
             type: 'post',
             data: { email, password },
-            success: function () {
-                alert("successfully signed in");
+            success: function (data) {
+                alert("Signed In Succesfully");
+                window.location.href = data.redirect
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(jqXHR.responseText);

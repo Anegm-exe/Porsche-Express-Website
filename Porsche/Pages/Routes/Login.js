@@ -23,9 +23,10 @@ module.exports = async (req, res) => {
 
     delete user.password;
     const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: "1h" });
+    client.close();
 
     res.cookie("token", token, {
         httpOnly: true
     });
-    return res.status(200).redirect('/Home');
+    res.json({ status: 'success', redirect: '/Home' });
 };
