@@ -41,5 +41,5 @@ module.exports = async (req, res) => {
             return res.status(500).send('An error occurred');
         }
     }
-    res.json({ status: 'success', redirect: '/Signin' });
+    return res.status(200).redirect('/Signin');
 }

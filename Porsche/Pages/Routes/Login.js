@@ -26,11 +26,10 @@ module.exports = async (req, res) => {
     delete user.password;
     user.role = role; // Add role to user
     const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: "1h" });
-    client.close();
+    client.close(); 
 
     res.cookie("token", token, {
         httpOnly: true
     });
-    res.cookie("role", role); // Set role in a separate cookie
-    return res.json({ status: 'success', redirect: '/Home' });
+    res.status(200).redirect('/Home');
 };

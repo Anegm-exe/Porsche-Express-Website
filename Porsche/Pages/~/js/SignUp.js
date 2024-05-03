@@ -23,29 +23,3 @@ hideIcon2.addEventListener('mouseup', function () {
     passwordInput2.type = "password";
     hideIcon2.src = "~/css/images/Sign/Hide-Pass.png";
 });
-
-$(document).ready(function () {
-    $(".submitionbutton").click(function (e) {
-        e.preventDefault();
-
-        var Fname = $("#FirstName").val();
-        var Lname = $("#LastName").val();
-        var email = $("#Email").val();
-        var password = $("#Passone").val();
-        var confirmPassword = $("#Passtwo").val();
-        var dob = $("#Birth_Date").val();
-
-        $.ajax({
-            url: '/SignUp',
-            type: 'post',
-            data: { Fname, Lname, email, password, confirmPassword, dob },
-            success: function (data) {
-                alert('User created');
-                window.location.href = data.redirect;
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert(jqXHR.responseText);
-            }
-        });
-    });
-});
