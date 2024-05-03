@@ -2,12 +2,15 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
+const { cookieJwtAuth } = require('./Porsche/Pages/Middleware/cookieJwtAuth');
 require('dotenv').config();
 
 // Express App
 
 const app = express();
+app.use(cookieParser());
 const PORT = process.env.PORT || 3000;
 const saltRounds = 10;
 const secretKey = process.env.SECRET_KEY || '3kWn7$!l#X@3l7cF';
@@ -70,46 +73,8 @@ app.post('/SignUp', async (req, res) => {
     }
 });
 
-app.post('/SignIn', async (req, res) => {
-    const { email, password } = req.body;
-    console.log(req.body)
-    
-    const db = client.db('porsche');
-    const customerCollection = db.collection('Customer');
-    const adminCollection = db.collection('Admin');
-
-    try {
-        // Checking in all users
-        let user = await customerCollection.findOne({ email: email });
-        let role = 'Customer';
-
-        if (!user) {
-            user = await adminCollection.findOne({ email: email });
-            role = 'Admin';
-        }
-
-        if (!user) {
-            return res.status(404).send('Invalid Email');
-        }
-        console.log(user.password)
-
-        // Compare the entered password with the hashed password stored in the database
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(403).send('Invalid password');
-        }
-
-        // If the password is correct, generate a JWT for the user
-        // Include the user's role in the JWT payload
-        const token = jwt.sign({ _id: user._id, role: role, name: user.First_name }, secretKey);
-
-        // Send the token to the client
-        res.status(200).json({ token: token });
-    } catch (err) {
-        console.error('Error occurred while signing in:', err);
-        res.status(500).send('An error occurred');
-    }
-});
+const loginRoute = require('./Porsche/Pages/Routes/login');
+app.post('/SignIn', loginRoute);
 
 // JWT verification middleware
 function authenticateToken(req, res, next) {
