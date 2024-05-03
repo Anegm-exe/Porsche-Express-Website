@@ -39,9 +39,9 @@ $(document).ready(function () {
             url: '/SignUp',
             type: 'post',
             data: { Fname, Lname, email, password, confirmPassword, dob },
-            success: function () {
+            success: function (data) {
                 alert('User created');
-                // Redirect to another page here if needed
+                window.location.href = data.redirect;
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(jqXHR.responseText);

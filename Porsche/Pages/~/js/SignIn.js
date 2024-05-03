@@ -22,7 +22,7 @@ $(document).ready(function () {
             data: { email, password },
             success: function (data) {
                 alert("Signed In Succesfully");
-                window.location.href = data.redirect
+                window.location.href = data.redirect;
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(jqXHR.responseText);

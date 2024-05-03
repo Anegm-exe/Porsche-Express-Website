@@ -28,5 +28,5 @@ module.exports = async (req, res) => {
     res.cookie("token", token, {
         httpOnly: true
     });
-    res.json({ status: 'success', redirect: '/Home' });
+    return res.json({ status: 'success', redirect: '/Home' });
 };

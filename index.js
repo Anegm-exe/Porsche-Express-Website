@@ -11,9 +11,6 @@ require('dotenv').config();
 const app = express();
 app.use(cookieParser());
 const PORT = process.env.PORT || 3000;
-const saltRounds = 10;
-const secretKey = process.env.SECRET_KEY || '3kWn7$!l#X@3l7cF';
-
 
 // MongoDB connection
 const { MongoClient } = require('mongodb');
@@ -39,58 +36,18 @@ app.get('/:page', (req, res) => {
         res.status(404).send('Page not found');
 });
 
-app.post('/SignUp', async (req, res) => {
-    const { Fname, Lname, email, password, confirmPassword, dob } = req.body;
+// Signin
+const SignUpRoute = require('./Porsche/Pages/Routes/SignUp');
+app.post('/SignUp', SignUpRoute);
 
-    // Check if password and confirmPassword match
-    if (password !== confirmPassword) {
-        return res.status(400).send('Passwords do not match');
-    }
-
-    const db = client.db('porsche');
-    const usersCollection = db.collection('Customer');
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // Create new user
-    const newUser = {
-        First_name: Fname,
-        Last_name: Lname,
-        email: email,
-        password: hashedPassword, // store the hashed password
-        dob: dob
-    };
-
-    try {
-        // Insert the new user into the database
-        const result = await usersCollection.insertOne(newUser);
-        console.log(`New user created with the following id: ${result.insertedId}`);
-        res.status(201).send('User created');
-    } catch (err) {
-        console.error('Error occurred while creating user:', err);
-        if (err.code === 11000) {
-            res.status(409).send('Email already exists');
-        } else {
-            res.status(500).send('An error occurred');
-        }
-    }
-});
-
+// Login 
 const loginRoute = require('./Porsche/Pages/Routes/login');
 app.post('/SignIn', loginRoute);
 
-// JWT verification middleware
-function authenticateToken(req, res, next) {
-    const token = req.headers['authorization'];
-    if (!token) return res.sendStatus(401);
-
-    jwt.verify(token, secretKey, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
-}
+// EXAMPLE FOR MIDDLEWARE
+// app.get('/Collection',cookieJwtAuth,(req,res) => {
+    
+// });
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on http://localhost:${PORT}`);
