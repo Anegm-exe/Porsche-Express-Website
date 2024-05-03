@@ -2,12 +2,14 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 // Express App
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const saltRounds = 10;
 const secretKey = process.env.SECRET_KEY || '3kWn7$!l#X@3l7cF';
 
 
@@ -41,12 +43,15 @@ app.post('/SignUp', async (req, res) => {
     const db = client.db('porsche');
     const usersCollection = db.collection('Customer');
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     // Create new user
     const newUser = {
         First_name: Fname,
         Last_name: Lname,
         email: email,
-        password: password, // TODO: hash passwords
+        password: hashedPassword, // store the hashed password
         dob: dob
     };
 
@@ -66,48 +71,56 @@ app.post('/SignUp', async (req, res) => {
 });
 
 app.post('/SignIn', async (req, res) => {
-  const { email, password } = req.body;
-  console.log(req.body)
-  const db = client.db('porsche');
-  const customerCollection = db.collection('Customer');
-  const adminCollection = db.collection('Admin');
+    const { email, password } = req.body;
+    console.log(req.body)
+    
+    const db = client.db('porsche');
+    const customerCollection = db.collection('Customer');
+    const adminCollection = db.collection('Admin');
 
-  try {
-      // Check in Customer table
-      let user = await customerCollection.findOne({ email: email });
-      if (!user) {
-          // If not found in Customer table, check in Admin table
-          user = await adminCollection.findOne({ email: email });
-      }
+    try {
+        // Checking in all users
+        let user = await customerCollection.findOne({ email: email });
+        let role = 'Customer';
 
-      if (!user) {
-          return res.status(404).send('User not found');
-      }
-      if (password != user.password) {
-          return res.status(403).send('Invalid password');
-      }
-      // If the password is correct, generate a JWT for the user
-      // Include the user's role in the JWT payload
-      const token = jwt.sign({ _id: user._id, role: user.role }, secretKey);
+        if (!user) {
+            user = await adminCollection.findOne({ email: email });
+            role = 'Admin';
+        }
 
-      // Send the token to the client
-      res.status(200).json({ token: token });
-  } catch (err) {
-      console.error('Error occurred while signing in:', err);
-      res.status(500).send('An error occurred');
-  }
+        if (!user) {
+            return res.status(404).send('Invalid Email');
+        }
+        console.log(user.password)
+
+        // Compare the entered password with the hashed password stored in the database
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(403).send('Invalid password');
+        }
+
+        // If the password is correct, generate a JWT for the user
+        // Include the user's role in the JWT payload
+        const token = jwt.sign({ _id: user._id, role: role }, secretKey);
+
+        // Send the token to the client
+        res.status(200).json({ token: token });
+    } catch (err) {
+        console.error('Error occurred while signing in:', err);
+        res.status(500).send('An error occurred');
+    }
 });
+
 // JWT verification middleware
 function authenticateToken(req, res, next) {
-  const token = req.headers['authorization'];
-  if (!token) return res.sendStatus(401);
+    const token = req.headers['authorization'];
+    if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, secretKey, (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      res.redirect('/home');
-      next();
-  });
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
 }
 
 // MongoDB connection

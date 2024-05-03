@@ -15,7 +15,7 @@ $(document).ready(function () {
     $(".submitionbutton").click(function (e) {
         e.preventDefault();
         var email = $("#Email").val();
-        var password = $("#Password").val();
+        var password = $("#PI").val(); // Changed from "#Password" to "#PI"
         $.ajax({
             url: '/SignIn',
             type: 'post',
