@@ -8,13 +8,17 @@ const { cookieJwtAuth } = require('./Porsche/Pages/Middleware/cookieJwtAuth');
 require('dotenv').config();
 
 // Express App
-
 const app = express();
 app.use(cookieParser());
 const PORT = process.env.PORT || 3000;
 const saltRounds = 10;
 const secretKey = process.env.SECRET_KEY || '3kWn7$!l#X@3l7cF';
 
+
+// MongoDB connection
+const { MongoClient } = require('mongodb');
+const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect();
 
 const publicPath = path.join(__dirname,'Porsche/Pages');
 app.use(express.static(publicPath));
@@ -87,23 +91,6 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
-
-// MongoDB connection
-const { MongoClient } = require('mongodb');
-const mongoURI = 'mongodb+srv://porschteez:d7NzmIIfk7Nkj8fY@cluster0.aoy9mn2.mongodb.net/';
-const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-async function run() {
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB");
-        // You can add more MongoDB operations here.
-    } catch (err) {
-        console.error('Error connecting to MongoDB', err);
-    }
-}
-
-run().catch(console.dir);
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on http://localhost:${PORT}`);

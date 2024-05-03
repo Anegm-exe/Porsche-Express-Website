@@ -22,7 +22,6 @@ $(document).ready(function () {
             data: { email, password },
             success: function () {
                 alert("successfully signed in");
-                window.location.href = '/Home';
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(jqXHR.responseText);

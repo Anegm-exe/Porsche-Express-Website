@@ -10,12 +10,5 @@
 });
 
 $(document).ready(function () {
-    // Check if the JWT exists
-    var token = localStorage.getItem('jwt');
-    if (token) {
-        var payload = JSON.parse(atob(token.split('.')[1]));
-        var name = payload.name;
-        // If the JWT exists, disable the sign-in button and show the user's name
-        $('a[href="SignIn"]').replaceWith('<span>' + name + '</span>');
-    }
+    // under construction
 });

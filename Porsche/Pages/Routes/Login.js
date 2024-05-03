@@ -5,20 +5,21 @@ module.exports = async (req, res) => {
     const { Email, Password } = req.body;
     const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
-    if (!Email || !Password) return res.status(400).json({ message: 'Please fill in all fields' });
-    await client.connect();
     const db = client.db('porsche');
     const collection = db.collection('Customer');
-
-    const user = await collection.findOne({ Email });
+    console.log(Email + " " + Password);
+    const user = await collection.findOne({ email : Email });
     if (!user) {
         collection = db.collection('Admin');
-        user = await collection.findOne({ Email });
+        user = await collection.findOne({ email : Email });
         if (!user) return res.status(400).json({ message: 'User does not exist' });
     }
-    if (user.Password !== Password) {
-        return res.status(403).json({ error: "Invalid Password" });
+    
+    const isMatch = await bcrypt.compare(Password, user.password);
+    if (!isMatch) {
+        return res.status(403).send('Invalid password');
     }
+
     delete user.Password;
     const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: "1h" });
     res.cookie("token", token, {
