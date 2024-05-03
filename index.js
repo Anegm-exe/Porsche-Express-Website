@@ -101,7 +101,7 @@ app.post('/SignIn', async (req, res) => {
 
         // If the password is correct, generate a JWT for the user
         // Include the user's role in the JWT payload
-        const token = jwt.sign({ _id: user._id, role: role }, secretKey);
+        const token = jwt.sign({ _id: user._id, role: role, name: user.First_name }, secretKey);
 
         // Send the token to the client
         res.status(200).json({ token: token });
@@ -125,9 +125,7 @@ function authenticateToken(req, res, next) {
 
 // MongoDB connection
 const { MongoClient } = require('mongodb');
-
 const mongoURI = 'mongodb+srv://porschteez:d7NzmIIfk7Nkj8fY@cluster0.aoy9mn2.mongodb.net/';
-
 const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function run() {

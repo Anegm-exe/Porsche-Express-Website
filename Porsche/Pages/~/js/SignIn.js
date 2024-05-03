@@ -21,8 +21,9 @@ $(document).ready(function () {
             type: 'post',
             data: { email, password },
             success: function () {
-                alert('User signed in');
-                // Redirect to another page here if needed
+                alert("successfully signed in");
+                localStorage.setItem('jwt', response.token);
+                window.location.href = '/Home';
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(jqXHR.responseText);
