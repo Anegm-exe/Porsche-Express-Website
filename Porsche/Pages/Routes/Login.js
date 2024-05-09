@@ -15,12 +15,12 @@ module.exports = async (req, res) => {
         collection = db.collection('Admin');
         user = await collection.findOne({ email: email });
         role = 'admin';
-        if (!user) return res.status(400).json({ message: 'User does not exist' });
+        if (!user) return res.status(400).json('User does not exist');
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.status(403).send('Invalid password');
+        return res.status(403).json('Invalid password');
     }
 
     delete user.password;

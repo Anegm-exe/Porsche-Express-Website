@@ -151,6 +151,55 @@ app.get('/Collection/api/v1/cars/search/:carName', (req, res) => {
   });
 });
 
+// Add inside cart
+app.post('/api/v1/cart/:userId/:productId', async (req, res) => {
+    const { userId, productId } = req.params;
+
+    const product = await db.collection('Product').findOne({ _id: new ObjectId(productId) });
+    if (!product) {
+        return res.status(404).json('Product not found');
+    }
+
+    const result = await db.collection('Customer').updateOne(
+        { _id: new ObjectId(userId) },
+        { $push: { Cart: product } }
+    );
+
+    if (result.modifiedCount === 1) {
+        res.status(200).json('Product added to cart');
+    } else {
+        res.status(500).json('An error occurred');
+    }
+});
+
+// delete from cart
+app.delete('/api/v1/cart/:userId/:productId', async (req, res) => {
+    const { userId, productId } = req.params;
+
+    const result = await db.collection('Customer').updateOne(
+        { _id: new ObjectId(userId) },
+        { $pull: { Cart: { _id: new ObjectId(productId) } } }
+    );
+
+    if (result.modifiedCount === 1) {
+        res.status(200).json('Product removed from cart');
+    } else {
+        res.status(500).json('An error occurred');
+    }
+});
+
+// get cart items
+app.get('/api/v1/cart/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    const user = await db.collection('Customer').findOne({ _id: new ObjectId(userId) });
+    if (!user) {
+        return res.status(404).json('User not found');
+    }
+
+    res.status(200).json(user.cart);
+});
+
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on http://localhost:${PORT}`);

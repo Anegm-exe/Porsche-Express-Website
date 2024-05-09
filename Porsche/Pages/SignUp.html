@@ -37,7 +37,7 @@
             <a href="Contact">Contact</a>
             <a href="SignIn">Sign In</a>
         </div>
-        <form action="/SignUp" method="post">
+        <form action="/SignUp" method="post" id="signupForm">
             <div class="content-container">
                 <div class="Container">
                     <!-- Image -->
@@ -62,7 +62,7 @@
                         <!-- password -->
                         <div class="Password">
                             <div class="field">
-                                <input type="text" id="Passone" name="password" placeholder="Enter password" required="required">
+                                <input type="password" id="Passone" name="password" placeholder="Enter password" required="required">
                                 <div class="line"></div>
                                 <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Iconone">
                             </div>
@@ -70,7 +70,7 @@
                         <!-- Confirm password -->
                         <div class="Password2">
                             <div class="field">
-                                <input type="text" id="Passtwo" name="confirmPassword" placeholder="Confirm password" required="required">
+                                <input type="password" id="Passtwo" name="confirmPassword" placeholder="Confirm password" required="required">
                                 <div class="line"></div>
                                 <img src="~/css/images/Sign/Hide-Pass.png" class="hideicon" id="Icontwo">
                             </div>
@@ -108,7 +108,6 @@
             </div>
         </form>
         <script src="~/js/Layout.js" asp-append-version="true"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="~/js/SignUp.js" asp-append-version="true"></script>
     </body>
 </html>

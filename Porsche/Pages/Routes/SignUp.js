@@ -3,7 +3,6 @@ const MongoClient = require('mongodb').MongoClient;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
 module.exports = async (req, res) => {
     const { Fname, Lname, email, password, confirmPassword, dob } = req.body;
 
@@ -33,15 +32,14 @@ module.exports = async (req, res) => {
     };
 
     try {
-        // Insert the new user into the database
         const result = await usersCollection.insertOne(newUser);
         console.log(`New user created with the following id: ${result.insertedId}`);
     } catch (err) {
         console.error('Error occurred while creating user:', err);
         if (err.code === 11000) {
-            return res.status(409).send('Email already exists');
+            return res.status(409).json('Email already exists');
         } else {
-            return res.status(500).send('An error occurred');
+            return res.status(500).json('An error occurred');
         }
     }
     return res.status(200).redirect('/Signin');
