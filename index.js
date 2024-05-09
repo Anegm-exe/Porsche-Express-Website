@@ -77,7 +77,7 @@ app.get('/Collection/api/v1/cars/:id',(req,res)=>{
 // Add a car
 app.post('/Collection/api/v1/cars',cookieJwtAuth,(req,res)=>{
   const user = req.user;
-  if(user.role !== 'Admin') 
+  if(user.role !== 'admin') 
     return res.status(400).json({msg:"You cannot add because you are not an admin"});
 
   const car = req.body;
@@ -95,7 +95,7 @@ app.post('/Collection/api/v1/cars',cookieJwtAuth,(req,res)=>{
 // Update a car
 app.patch('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
   const user = req.user;
-  if(user.role !== 'Admin') 
+  if(user.role !== 'admin') 
     return res.status(400).json({msg:"You cannot update because you are not an admin"});
   
   const updates = req.body;
@@ -117,7 +117,7 @@ app.patch('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
 // Delete a car
 app.delete('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
   const user = req.user;
-  if(user.role !== 'Admin') 
+  if(user.role !== 'admin') 
     return res.status(400).json({msg:"You cannot delete because you are not an admin"});
   
   const id = req.params.id;
