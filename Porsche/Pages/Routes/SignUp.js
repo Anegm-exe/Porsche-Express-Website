@@ -21,12 +21,15 @@ module.exports = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Create new user
+    const dobDate = new Date(dob);
+
     const newUser = {
         First_name: Fname,
         Last_name: Lname,
         email: email,
         password: hashedPassword, // store the hashed password
-        dob: dob
+        dob: dobDate,
+        cart: []
     };
 
     try {

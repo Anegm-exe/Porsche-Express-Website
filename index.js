@@ -36,7 +36,7 @@ app.get('/:page', (req, res) => {
         res.status(404).send('Page not found');
 });
 
-// Signin
+// SignUp
 const SignUpRoute = require('./Porsche/Pages/Routes/SignUp');
 app.post('/SignUp', SignUpRoute);
 
