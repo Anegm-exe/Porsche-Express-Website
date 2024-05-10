@@ -4,13 +4,16 @@ const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const { cookieJwtAuth } = require('./Porsche/Pages/Middleware/cookieJwtAuth');
 require('dotenv').config();
+const axios = require('axios');
+
+
 
 // Express App
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 const PORT = process.env.PORT || 3000;
-
+axios.defaults.baseURL = `http://localhost:${PORT}`;
 // MongoDB connection
 const { MongoClient, ObjectId } = require('mongodb');
 const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -152,54 +155,64 @@ app.get('/Collection/api/v1/cars/search/:carName', (req, res) => {
 });
 
 // Add inside cart
-app.post('/api/v1/cart/:userId/:productId', async (req, res) => {
-    const { userId, productId } = req.params;
-
-    const product = await db.collection('Product').findOne({ _id: new ObjectId(productId) });
-    if (!product) {
-        return res.status(404).json('Product not found');
-    }
-
-    const result = await db.collection('Customer').updateOne(
-        { _id: new ObjectId(userId) },
-        { $push: { Cart: product } }
-    );
-
-    if (result.modifiedCount === 1) {
-        res.status(200).json('Product added to cart');
-    } else {
-        res.status(500).json('An error occurred');
-    }
+app.post('/Profile/api/v1/cart/:productId',cookieJwtAuth, (req, res) => {
+  const productId = req.params.productId;
+  const userId = req.user._id;
+  
+  db.collection('Customer').updateOne(
+      { _id: new ObjectId(userId) },
+      { $push: { cart: productId } }
+  )
+  .then(() => {
+    res.status(200).json('Product added to cart');
+  })
+  .catch((err) => {
+    res.status(500).json('An error occurred');
+  });
 });
 
 // delete from cart
-app.delete('/api/v1/cart/:userId/:productId', async (req, res) => {
-    const { userId, productId } = req.params;
-
-    const result = await db.collection('Customer').updateOne(
-        { _id: new ObjectId(userId) },
-        { $pull: { Cart: { _id: new ObjectId(productId) } } }
-    );
-
-    if (result.modifiedCount === 1) {
-        res.status(200).json('Product removed from cart');
-    } else {
-        res.status(500).json('An error occurred');
-    }
+app.delete('/Profile/api/v1/cart/:productId', cookieJwtAuth, (req, res) => {
+  const productId = req.params.productId;
+  const userId = req.user._id;
+  db.collection('Customer').findOneAndUpdate(
+    { _id: new ObjectId(userId) },
+    { $pull : { cart : productId } }
+  )
+  .then(() => {
+    res.status(200).json({message : 'Product removed from cart'});
+  })
+  .catch((err) => {
+    res.status(500).json('An error occurred while deleting');
+  });
 });
+
 
 // get cart items
-app.get('/api/v1/cart/:userId', async (req, res) => {
-    const { userId } = req.params;
-
-    const user = await db.collection('Customer').findOne({ _id: new ObjectId(userId) });
-    if (!user) {
-        return res.status(404).json('User not found');
+app.get('/Profile/api/v1/cart', cookieJwtAuth, async (req, res) => {
+  const userId = req.user._id;
+  let collection = db.collection('Customer');
+  const cart = await collection.findOne(
+    { _id: new ObjectId(userId) },
+    { projection: { cart: 1, _id: 0 } }
+  );
+  let carDetails = [];
+  try {
+    for (const carId of cart.cart) {
+      try {
+        const response = await axios.get(`/Collection/api/v1/cars/${carId}`);
+        carDetails.push(response.data);
+      } catch (error) {
+        carDetails.push({
+          message: `Car with ID ${carId} is unavailable.`
+        });
+      }
     }
-
-    res.status(200).json(user.cart);
+    res.status(200).json(carDetails);
+  } catch (error) {
+    res.status(500).json('Error while fetching cart');
+  }
 });
-
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on http://localhost:${PORT}`);

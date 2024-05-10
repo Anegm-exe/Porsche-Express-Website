@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const MongoClient = require('mongodb').MongoClient;
 const bcrypt = require('bcrypt');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res,next) => {
     const { email, password } = req.body;
     const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
@@ -24,6 +24,8 @@ module.exports = async (req, res) => {
     }
 
     delete user.password;
+    delete user.cart;
+    
     user.role = role; // Add role to user
     const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: "1h" });
     client.close(); 
@@ -31,5 +33,5 @@ module.exports = async (req, res) => {
     res.cookie("token", token, {
         httpOnly: true
     });
-    res.status(200).redirect('/Home');
+    res.status(200).json({message:"Login successful !"});
 };

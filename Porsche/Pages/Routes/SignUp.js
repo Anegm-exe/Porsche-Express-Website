@@ -5,7 +5,6 @@ const saltRounds = 10;
 
 module.exports = async (req, res) => {
     const { Fname, Lname, email, password, confirmPassword, dob } = req.body;
-
     if (password !== confirmPassword) {
         return res.status(400).send('Passwords do not match');
     }
@@ -42,5 +41,5 @@ module.exports = async (req, res) => {
             return res.status(500).json('An error occurred');
         }
     }
-    return res.status(200).redirect('/Signin');
+    res.status(200).json({message:'Account created !'});
 }
