@@ -35,11 +35,10 @@ module.exports = async (req, res) => {
         const result = await usersCollection.insertOne(newUser);
         console.log(`New user created with the following id: ${result.insertedId}`);
     } catch (err) {
-        console.error('Error occurred while creating user:', err);
         if (err.code === 11000) {
-            return res.status(409).json('Email already exists');
+            return res.status(409).json({ message: 'Email already exists'});
         } else {
-            return res.status(500).json('An error occurred');
+            return res.status(500).json({ message: 'An error occurred'});
         }
     }
     return res.status(200).json({ message: "SignUp Succesful!" });
