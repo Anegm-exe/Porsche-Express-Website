@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
     }
 
     delete user.password;
+    delete user.cart;
     user.role = role; // Add role to user
     const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: "1h" });
     client.close();
