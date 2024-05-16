@@ -3,8 +3,9 @@ const MongoClient = require('mongodb').MongoClient;
 const bcrypt = require('bcrypt');
 
 module.exports = async (req, res) => {
+    
     const { email, password } = req.body;
-    const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     const db = client.db('porsche');
     let collection = db.collection('Customer');
@@ -15,12 +16,12 @@ module.exports = async (req, res) => {
         collection = db.collection('Admin');
         user = await collection.findOne({ email: email });
         role = 'admin';
-        if (!user) return res.status(400).json({ error: 'User does not exist' });
+        if (!user) return res.status(400).json({ error: 'Email or password are incorrect' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.status(403).json({ error: 'Invalid password' });
+        return res.status(403).json({error: 'Email or password are incorrect' });
     }
 
     delete user.password;
@@ -31,5 +32,5 @@ module.exports = async (req, res) => {
     res.cookie("token", token, {
         httpOnly: true
     });
-    res.status(200).json({ message: 'Login successful', token: token });
+    return res.status(200).json({ message: 'Login successful',token:token});
 };

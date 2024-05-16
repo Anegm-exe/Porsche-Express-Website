@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 axios.defaults.baseURL = `http://localhost:${PORT}`;
 // MongoDB connection
 const { MongoClient, ObjectId } = require('mongodb');
-const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(process.env.MONGODB_URI);
 client.connect();
 const db = client.db('porsche');
 
@@ -34,9 +34,9 @@ app.get('/:page', (req, res) => {
   const filePath = path.join(__dirname, `Porsche/Pages/${page}.html`);
 
     if (fs.existsSync(filePath))
-        res.status(200).sendFile(filePath);
+        return res.status(200).sendFile(filePath);
     else
-        res.status(404).send('Page not found');
+        return res.status(404).json({error:'Page not found'});
 });
 
 // SignUp
@@ -44,7 +44,7 @@ const SignUpRoute = require('./Porsche/Pages/Routes/SignUp');
 app.post('/SignUp', SignUpRoute);
 
 // Login 
-const loginRoute = require('./Porsche/Pages/Routes/login');
+const loginRoute = require('./Porsche/Pages/Routes/Login');
 app.post('/SignIn', loginRoute);
 
 // Get all cars
@@ -54,9 +54,9 @@ app.get('/Collection/api/v1/cars',(req,res)=>{
     .find()
     .forEach(car => cars.push(car))
     .then(()=>{
-      res.status(200).json(cars);
+      return res.status(200).json({cars:cars});
     }).catch((err)=>{
-      res.status(500).json({error:"Error in fetching data"});
+      return res.status(500).json({error:"Error in fetching data"});
     })
 });
 
@@ -66,14 +66,14 @@ app.get('/Collection/api/v1/cars/:id',(req,res)=>{
   if(ObjectId.isValid(id)){
     db.collection('Product')
     .findOne({_id:new ObjectId(id)})
-    .then(doc => {
-      res.status(200).json(doc);
+    .then(car => {
+      return res.status(200).json({car : car});
     })
     .catch((err) => {
-      res.status(500).json({error:"Error in fetching data"});
+      return res.status(500).json({error:"Error in fetching data"});
     })
   }else{
-    res.status(400).json({error:"Invalid ID"});
+    return res.status(400).json({error:"Invalid ID"});
   }
 });
 
@@ -81,16 +81,16 @@ app.get('/Collection/api/v1/cars/:id',(req,res)=>{
 app.post('/Collection/api/v1/cars',cookieJwtAuth,(req,res)=>{
   const user = req.user;
   if(user.role !== 'admin') 
-    return res.status(400).json({msg:"You cannot add because you are not an admin"});
+    return res.status(400).json({error:"You cannot add because you are not an admin"});
 
   const car = req.body;
   db.collection('Product')
   .insertOne(car)
   .then(() => {
-    res.status(201).json({msg:"Added Successfully"});
+    return res.status(201).json({message:"Added Successfully"});
   })
   .catch((err) => {
-    res.status(500).json({error:"Error in adding"});
+    return res.status(500).json({error:"Error in adding"});
   })
 
 });
@@ -107,13 +107,13 @@ app.patch('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
     db.collection('Product')
     .updateOne({_id:new ObjectId(id)},{$set:updates})
     .then(() => {
-      res.status(200).json({msg:"Updated Successfully"});
+      return res.status(200).json({message:"Updated Successfully"});
     })
     .catch((err) => {
-      res.status(500).json({msg:"Error in updating"});
+      return res.status(500).json({error:"Error in updating"});
     })
   }else{
-    res.status(400).json({error:"Invalid ID"});
+    return res.status(400).json({error:"Invalid ID"});
   }
 });
 
@@ -121,20 +121,20 @@ app.patch('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
 app.delete('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
   const user = req.user;
   if(user.role !== 'admin') 
-    return res.status(400).json({msg:"You cannot delete because you are not an admin"});
+    return res.status(400).json({error:"You cannot delete because you are not an admin"});
   
   const id = req.params.id;
   if(ObjectId.isValid(id)){
     db.collection('Product')
     .deleteOne({_id:new ObjectId(id)})
     .then(() => {
-      res.status(204).json({msg:"Deleted Successfully"});
+      return res.status(204).json({ message :"Deleted Successfully"});
     })
     .catch((err) => {
-      res.status(500).json({msg:"Error in Deleting"});
+      return res.status(500).json({error:"Error in Deleting"});
     })
   }else{
-    res.status(400).json({error:"Invalid ID"});
+    return res.status(400).json({error:"Invalid ID"});
   }
 });
 
@@ -147,10 +147,10 @@ app.get('/Collection/api/v1/cars/search/:carName', (req, res) => {
   .forEach(car => cars.push(car))
   .then(() => {
     if(cars.length > 0)
-      return res.json(cars);
-    res.status(404).json({ msg: "No cars found" });
+      return res.status(200).json({cars:cars});
+    return res.status(404).json({ error : "No cars found" });
   }).catch((err) => {
-    res.status(500).json({ msg: "Error in getting car"});
+    return res.status(500).json({ error : "Error in getting car"});
   });
 });
 
@@ -164,10 +164,10 @@ app.post('/Profile/api/v1/cart/:productId',cookieJwtAuth, (req, res) => {
       { $push: { cart: productId } }
   )
   .then(() => {
-    res.status(200).json('Product added to cart');
+    return res.status(200).json({message : 'Product added to cart'});
   })
   .catch((err) => {
-    res.status(500).json('An error occurred');
+    return res.status(500).json({error : 'An error occurred'});
   });
 });
 
@@ -180,10 +180,10 @@ app.delete('/Profile/api/v1/cart/:productId', cookieJwtAuth, (req, res) => {
     { $pull : { cart : productId } }
   )
   .then(() => {
-    res.status(200).json({message : 'Product removed from cart'});
+    return res.status(200).json({message : 'Product removed from cart'});
   })
   .catch((err) => {
-    res.status(500).json('An error occurred while deleting');
+    return res.status(500).json({error:'An error occurred while deleting'});
   });
 });
 
@@ -208,9 +208,9 @@ app.get('/Profile/api/v1/cart', cookieJwtAuth, async (req, res) => {
         });
       }
     }
-    res.status(200).json(carDetails);
+    return res.status(200).json(carDetails);
   } catch (error) {
-    res.status(500).json('Error while fetching cart');
+    return res.status(500).json({error:'Error while fetching cart'});
   }
 });
 

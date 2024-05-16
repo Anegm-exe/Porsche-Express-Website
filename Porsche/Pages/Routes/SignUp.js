@@ -7,11 +7,11 @@ module.exports = async (req, res) => {
     const { Fname, Lname, email, password, confirmPassword, dob } = req.body;
 
     if (password !== confirmPassword) {
-        return res.status(400).send('Passwords do not match');
+        return res.status(400).json({error:'Passwords do not match'});
     }
 
     // Connect to MongoDB
-    const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     const db = client.db('porsche');
     const usersCollection = db.collection('Customer');
@@ -32,13 +32,12 @@ module.exports = async (req, res) => {
     };
 
     try {
-        const result = await usersCollection.insertOne(newUser);
-        console.log(`New user created with the following id: ${result.insertedId}`);
+        await usersCollection.insertOne(newUser);
     } catch (err) {
         if (err.code === 11000) {
-            return res.status(409).json({ message: 'Email already exists'});
+            return res.status(409).json({ error: 'Email already exists'});
         } else {
-            return res.status(500).json({ message: 'An error occurred'});
+            return res.status(500).json({ error: 'An error occurred'});
         }
     }
     return res.status(200).json({ message: "SignUp Succesful!" });
