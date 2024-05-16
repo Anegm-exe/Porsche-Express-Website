@@ -1,3 +1,7 @@
+const jwt = require('jsonwebtoken');
+const MongoClient = require('mongodb').MongoClient;
+const bcrypt = require('bcrypt');
+
 module.exports = async (req, res) => {
     const { email, password } = req.body;
     const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });

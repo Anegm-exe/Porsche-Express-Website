@@ -7,8 +7,6 @@ const { cookieJwtAuth } = require('./Porsche/Pages/Middleware/cookieJwtAuth');
 require('dotenv').config();
 const axios = require('axios');
 
-
-
 // Express App
 const app = express();
 app.use(express.json());

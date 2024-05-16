@@ -1,8 +1,13 @@
+const jwt = require('jsonwebtoken');
+const MongoClient = require('mongodb').MongoClient;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 module.exports = async (req, res) => {
     const { Fname, Lname, email, password, confirmPassword, dob } = req.body;
 
     if (password !== confirmPassword) {
-        return res.status(400).json({ error: 'Passwords do not match' });
+        return res.status(400).send('Passwords do not match');
     }
 
     // Connect to MongoDB
@@ -32,10 +37,10 @@ module.exports = async (req, res) => {
     } catch (err) {
         console.error('Error occurred while creating user:', err);
         if (err.code === 11000) {
-            return res.status(409).json({ error: 'Email already exists' });
+            return res.status(409).json('Email already exists');
         } else {
-            return res.status(500).json({ error: 'An error occurred' });
+            return res.status(500).json('An error occurred');
         }
     }
-    return res.status(200).json({ message: 'User created successfully' });
+    return res.status(200).redirect('/Signin');
 }
