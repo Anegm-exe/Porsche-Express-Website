@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { cookieJwtAuth } = require('./Porsche/Pages/Middleware/cookieJwtAuth');
 require('dotenv').config();
@@ -9,6 +10,7 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 // MongoDB connection
