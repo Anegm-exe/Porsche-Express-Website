@@ -92,8 +92,32 @@ app.patch('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
   if(user.role !== 'admin') 
     return res.status(400).json({msg:"You cannot update because you are not an admin"});
   
+  
   const updates = req.body;
   const id = req.params.id;
+
+  updates.stock = parseInt(updates.stock);
+  updates.Price = parseInt(updates.Price);
+  updates.Num_seats = parseInt(updates.Num_seats);
+
+  if(updates.model === '')
+    delete updates.model;
+  if(updates.Price === '' || isNaN(updates.Price))
+    delete updates.Price;
+  if(updates.Num_seats === '' || isNaN(updates.Num_seats))
+    delete updates.Num_seats;
+  if(updates.color === '')
+    delete updates.color;
+  if(updates.image === '')
+    delete updates.image;
+  if(updates.stock === ''|| isNaN(updates.stock))
+    delete updates.stock;
+  if(updates.type === '')
+    delete updates.type;
+
+  
+
+  console.log(updates)
   if(ObjectId.isValid(id)){
     db.collection('Product')
     .updateOne({_id:new ObjectId(id)},{$set:updates})
