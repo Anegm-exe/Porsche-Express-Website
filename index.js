@@ -206,6 +206,50 @@ app.get('/Profile/api/v1/cart', cookieJwtAuth, async (req, res) => {
   }
 });
 
+app.patch('/Profile/api/v1/purchase', cookieJwtAuth, async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+      // Retrieve the user's cart from the database
+      const userCart = await db.collection('Customer').findOne({ _id: new ObjectId(userId) });
+
+      if (!userCart) {
+          return res.status(404).json({ error: "Cart not found" });
+      }
+
+      // Get the details of each item in the cart
+      const carDetailsPromises = userCart.cart.map(async (itemId) => {
+          try {
+              const response = await axios.get(`/Collection/api/v1/cars/${itemId}`);
+              return response.data.car; // Assuming the car details are returned under the "car" key
+          } catch (error) {
+              console.error(`Failed to fetch car details for item ${itemId}: ${error}`);
+              return null; // Return null for failed requests
+          }
+      });
+
+      // Wait for all car details requests to complete
+      const carDetails = await Promise.all(carDetailsPromises);
+
+      // Calculate the total price of all items in the cart
+      const totalPrice = carDetails.reduce((total, car) => {
+          if (car && car.Price) {
+              return total + car.Price;
+          }
+          return total;
+      }, 0);
+
+      // Clear the user's cart in the database
+      await db.collection('Customer').updateOne({ _id: new ObjectId(userId) }, { $set: { cart: [] } });
+
+      // Return a JSON response containing the total price
+      return res.status(200).json({ message:"Thank you for purchaseing the total is " + totalPrice });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
