@@ -115,9 +115,6 @@ app.patch('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
   if(updates.type === '')
     delete updates.type;
 
-  
-
-  console.log(updates)
   if(ObjectId.isValid(id)){
     db.collection('Product')
     .updateOne({_id:new ObjectId(id)},{$set:updates})
