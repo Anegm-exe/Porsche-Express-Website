@@ -119,7 +119,7 @@ app.delete('/Collection/api/v1/cars/:id',cookieJwtAuth,(req,res)=>{
     db.collection('Product')
     .deleteOne({_id:new ObjectId(id)})
     .then(() => {
-      return res.status(204).json({ message :"Deleted Successfully"});
+      return res.status(200).json({ message :"Deleted Successfully"});
     })
     .catch((err) => {
       return res.status(500).json({error:"Error in Deleting"});
