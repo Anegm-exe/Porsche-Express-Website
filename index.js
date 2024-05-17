@@ -61,21 +61,27 @@ app.get('/Collection/api/v1/cars',(req,res)=>{
 });
 
 // Get a one car
-app.get('/Collection/api/v1/cars/:id',(req,res)=>{
+app.get('/Collection/api/v1/cars/:id', (req, res) => {
   const id = req.params.id;
-  if(ObjectId.isValid(id)){
-    db.collection('Product')
-    .findOne({_id:new ObjectId(id)})
-    .then(car => {
-      return res.status(200).json({car : car});
-    })
-    .catch((err) => {
-      return res.status(500).json({error:"Error in fetching data"});
-    })
-  }else{
-    return res.status(400).json({error:"Invalid ID"});
+  if (ObjectId.isValid(id)) {
+      db.collection('Product')
+          .findOne({ _id: new ObjectId(id) })
+          .then(car => {
+              if (car) {
+                  return res.status(200).json({ car: car });
+              } else {
+                  // No car found with the given ID
+                  return res.status(404).json({ error: "Car not found" });
+              }
+          })
+          .catch((err) => {
+              return res.status(500).json({ error: "Error in fetching data" });
+          })
+  } else {
+      return res.status(400).json({ error: "Invalid ID" });
   }
 });
+
 
 // Add a car
 app.post('/Collection/api/v1/cars',cookieJwtAuth,(req,res)=>{
@@ -201,9 +207,10 @@ app.get('/Profile/api/v1/cart', cookieJwtAuth, async (req, res) => {
     for (const carId of cart.cart) {
       try {
         const response = await axios.get(`/Collection/api/v1/cars/${carId}`);
-        carDetails.push(response.data);
+        carDetails.push(response.data); 
       } catch (error) {
         carDetails.push({
+          _id: carId,
           message: `Car with ID ${carId} is unavailable.`
         });
       }
