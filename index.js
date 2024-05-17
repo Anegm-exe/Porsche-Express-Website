@@ -24,21 +24,6 @@ const publicPath = path.join(__dirname,'Porsche/Pages');
 app.use(express.static(publicPath));
 app.use(express.urlencoded({ extended: true }));
 
-// Page Loaders
-app.get('/', (req, res) => {
-  res.redirect('/Home')
-});
-
-app.get('/:page', (req, res) => {
-  const page = req.params.page;
-  const filePath = path.join(__dirname, `Porsche/Pages/${page}.html`);
-
-    if (fs.existsSync(filePath))
-        return res.status(200).sendFile(filePath);
-    else
-        return res.status(404).json({error:'Page not found'});
-});
-
 // SignUp
 const SignUpRoute = require('./Porsche/Pages/Routes/SignUp');
 app.post('/SignUp', SignUpRoute);
