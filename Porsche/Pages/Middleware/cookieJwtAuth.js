@@ -8,6 +8,6 @@ exports.cookieJwtAuth = (req, res, next) => {
         next();
     } catch (err) {
         res.clearCookie("token");
-        return res.status(400).json({message:'Session ended please signin again'});
+        return res.status(400).json({error:'Session ended please signin again'});
     }
 }
